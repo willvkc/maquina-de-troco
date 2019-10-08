@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Máquina de Troco</string>
+    <string name="coin_name">Moeda</string>
+    <string name="bank_note_name">Cédula</string>
+</resources>
