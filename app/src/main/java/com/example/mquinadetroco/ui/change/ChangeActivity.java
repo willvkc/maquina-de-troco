@@ -57,18 +57,19 @@ public class ChangeActivity extends AppCompatActivity {
                     showMessage("Valor da conta não pode ser maior ou igual do que o pagamento.");
                     return;
                 } else {
+
                     changeViewModel.getChange(Double.parseDouble(countEditText.getText().toString()), Double.parseDouble(amountEditText.getText().toString()));
                 }
             }
         });
+
 
         changeViewModel.responseLiveData.observe(this, new Observer<Response>() {
             @Override
             public void onChanged(Response response) {
                 if (response != null) {
                     showMessage(response.getMessage());
-                    amountEditText.setText("");
-                    countEditText.setText("");
+
                     totalTextView.setText("");
 
                     if (!response.isError()) {

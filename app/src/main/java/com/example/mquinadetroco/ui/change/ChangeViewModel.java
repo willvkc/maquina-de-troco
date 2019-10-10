@@ -3,6 +3,7 @@ package com.example.mquinadetroco.ui.change;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -48,12 +49,22 @@ public class ChangeViewModel extends ViewModel {
         for (int i = 0; i < listCoins.size(); i++) {
             ItemCoin itemCoin = listCoins.get(i);
             double value = itemCoin.getValue();
-            int amount = (int) (change / value);
-            double remnant = change % value;
-            remnant = Double.valueOf(moneyFormat.format(remnant).replace(",", "."));
-
             if (value <= change) {
 
+                int amount = 0;
+                double remnant = 0;
+
+                if (change <= 0.15) {
+                    amount = (int) ((change / value) + 0.001);
+                    remnant = Double.valueOf(moneyFormat.format((change * 100) % (value * 100)).replace(",", "."));
+                    if (remnant != 0) {
+                        remnant = Double.valueOf(moneyFormat.format(remnant / 100).replace(",", "."));
+                    }
+                } else {
+                    amount = (int) ((change / value));
+                    remnant = Double.valueOf(moneyFormat.format(change % value).replace(",", "."));
+                }
+                
                 //If the required amount of forum coins is needed, it will not fetch any more available coins.
                 if (amount == 1) {
                     listCoinsSelected.add(new ItemCoin(itemCoin.getId(), value, amount));
@@ -62,15 +73,18 @@ public class ChangeViewModel extends ViewModel {
                 if (amount > 1) {
                     //Compare if you have the available amount of boxed coins, if not, go to next coin.
                     if (amount > itemCoin.getAmount()) {
+                        Log.i("Diabo", "passo 3 amount list " + itemCoin.getAmount());
                         remnant = Double.valueOf(moneyFormat.format(change - ((amount - itemCoin.getAmount()) * value)).replace(",", "."));
                         amount = itemCoin.getAmount();
                     }
+
                     change = Double.valueOf(moneyFormat.format(remnant).replace(",", "."));
                     listCoinsSelected.add(new ItemCoin(itemCoin.getId(), value, amount));
                 }
             }
         }
-        accept = change == 0;
+
+        accept = change <= 0.04;
         if (accept) {
             removeCoins(listCoinsSelected, pay - count);
         } else {
