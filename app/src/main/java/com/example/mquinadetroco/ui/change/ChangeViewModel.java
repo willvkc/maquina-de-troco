@@ -3,7 +3,6 @@ package com.example.mquinadetroco.ui.change;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -28,17 +27,14 @@ public class ChangeViewModel extends ViewModel {
 
     List<ItemCoin> getList() {
         List<ItemCoin> itemCoinList = new ArrayList<>();
-
-        Cursor cursor = dbGateway.getDatabase().rawQuery("SELECT * FROM " + DbConfig.TABLE_NAME, null);
+        Cursor cursor = dbGateway.getDatabase().rawQuery("SELECT * FROM " + DbConfig.TABLE_NAME + " ORDER BY " + DbConfig.VALUE_NAME + " DESC", null);
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndex(DbConfig.ID_NAME));
             int amount = cursor.getInt(cursor.getColumnIndex(DbConfig.AMOUNT_NAME));
             Double value = cursor.getDouble(cursor.getColumnIndex(DbConfig.VALUE_NAME));
             if (amount >= 1) itemCoinList.add(new ItemCoin(id, value, amount));
-            //itemCoinList.add(new ItemCoin(id, value, 10));
         }
         cursor.close();
-        Log.i("Lucinda", "size " + itemCoinList.size());
         return itemCoinList;
     }
 
@@ -52,10 +48,8 @@ public class ChangeViewModel extends ViewModel {
         teste:
         for (int i = 0; i < listCoins.size(); i++) {
             ItemCoin itemCoin = listCoins.get(i);
-
             double value = itemCoin.getValue();
             int amount = (int) (troco / value);
-
             double remnant = troco % value;
             remnant = Double.valueOf(formato.format(remnant).replace(",", "."));
 
@@ -74,10 +68,8 @@ public class ChangeViewModel extends ViewModel {
                     listCoinsSelected.add(new ItemCoin(itemCoin.getId(), value, amount));
                 }
             }
-
         }
-
-        Log.i("Diabao", "teste troco " + troco);
+        //Log.i("Teste", "troco_final " + troco);
         accept = troco == 0;
         if (accept) {
             removeCoins(listCoinsSelected, pago - conta);
@@ -87,64 +79,6 @@ public class ChangeViewModel extends ViewModel {
         }
     }
 
-
-    void calculaTrocoBK(double conta, double pago) {
-        List<ItemCoin> listCoinsSelected = new ArrayList<>();
-        List<ItemCoin> listCoins = getList();
-        double troco = pago - conta;
-        boolean accept = true;
-
-        teste:
-        for (int i = 0; i < listCoins.size(); i++) {
-            ItemCoin itemCoin = listCoins.get(i);
-
-            double value = itemCoin.getValue();
-            int amount = (int) (troco / value);
-            double amount_double = troco / value;
-            double remnant = troco % value;
-
-            if (amount_double > 0 && amount_double < 1) {
-                listCoinsSelected.add(new ItemCoin(itemCoin.getId(), value, amount));
-                break teste;
-            } else {
-
-                if (amount > itemCoin.getAmount()) {
-                    remnant = remnant + ((amount - itemCoin.getAmount()) * value);
-                    amount = itemCoin.getAmount();
-                }
-
-                if (remnant > 0.001 && remnant < 0.9) {
-                    remnant = remnant + 0.001;
-                }
-
-                if (remnant < 0.05) {
-                    i = listCoinsSelected.size() - 1;
-
-                } else {
-
-                    if (remnant >= 0.05 && i != (listCoins.size() - 1)) {
-                        troco = remnant;
-                        i++;
-                    } else {
-                        i = listCoinsSelected.size();
-                        if (remnant > 0.05) {
-                            accept = false;
-                        }
-
-                    }
-
-                }
-            }
-        }
-
-        if (accept) {
-            removeCoins(listCoinsSelected, pago - conta);
-        } else {
-            Response response = new Response("Não possui moedas necessárias para gerar troco.", true);
-            responseLiveData.setValue(response);
-        }
-
-    }
 
     private void removeCoins(List<ItemCoin> itemCoinList, Double sum) {
         for (ItemCoin itemCoin : itemCoinList) {

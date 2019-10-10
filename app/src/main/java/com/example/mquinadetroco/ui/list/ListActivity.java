@@ -31,6 +31,7 @@ public class ListActivity extends AppCompatActivity {
         final RecyclerView listRecyclerView = findViewById(R.id.listRecyclerView);
 
         listViewModel = ViewModelProviders.of(this, null).get(ListViewModel.class);
+        listViewModel.create(this);
         listViewModel.listMutableLiveData.observe(this, new Observer<List<ItemCoin>>() {
             @Override
             public void onChanged(List<ItemCoin> itemCoins) {
@@ -43,7 +44,7 @@ public class ListActivity extends AppCompatActivity {
             }
         });
 
-        listViewModel.getList(this);
+        listViewModel.getList();
 
     }
 

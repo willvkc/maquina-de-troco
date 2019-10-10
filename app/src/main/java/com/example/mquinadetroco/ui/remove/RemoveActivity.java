@@ -32,7 +32,7 @@ public class RemoveActivity extends AppCompatActivity {
         final Spinner spinnerCoin = findViewById(R.id.spinnerCoin);
 
         final RemoveViewModel removeViewModel = ViewModelProviders.of(this, null).get(RemoveViewModel.class);
-        removeViewModel.instace(this);
+        removeViewModel.create(this);
 
         removeViewModel.listMutableLiveData.observe(this, new Observer<List<ItemCoin>>() {
             @Override

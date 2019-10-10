@@ -1,6 +1,7 @@
 package com.example.mquinadetroco.data.model;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 public class ItemCoin {
 
@@ -49,16 +50,12 @@ public class ItemCoin {
         }
     }
 
-    public String getValueFormat1() {
-        return getType() + NumberFormat.getCurrencyInstance().format(value * amount);
-    }
-
     public String getValueFormat() {
-        return getType() + NumberFormat.getCurrencyInstance().format(value);
+        return getType() + NumberFormat.getCurrencyInstance(new Locale( "pt", "BR" )).format(value);
     }
 
     public String getTotal() {
         if (amount == 0) return "";
-        else return "Total: " + NumberFormat.getCurrencyInstance().format(value * amount);
+        else return "Total: " + NumberFormat.getCurrencyInstance(new Locale( "pt", "BR" )).format(value * amount);
     }
 }

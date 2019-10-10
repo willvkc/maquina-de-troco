@@ -15,14 +15,16 @@ import java.util.List;
 
 public class ListViewModel extends ViewModel {
     MutableLiveData<List<ItemCoin>> listMutableLiveData = new MutableLiveData<>();
+    private DbGateway dbGateway;
 
-    void getList(Context context) {
-        DbGateway dbGateway = DbGateway.getInstance(context);
+    void create(Context context) {
+        dbGateway = DbGateway.getInstance(context);
+    }
 
+    void getList() {
         List<ItemCoin> itemCoinList = new ArrayList<>();
-
-        Cursor cursor = dbGateway.getDatabase().rawQuery("SELECT * FROM " + DbConfig.TABLE_NAME, null);
-        while(cursor.moveToNext()){
+        Cursor cursor = dbGateway.getDatabase().rawQuery("SELECT * FROM " + DbConfig.TABLE_NAME + " ORDER BY " + DbConfig.VALUE_NAME + " DESC", null);
+        while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndex(DbConfig.ID_NAME));
             int amount = cursor.getInt(cursor.getColumnIndex(DbConfig.AMOUNT_NAME));
             Double value = cursor.getDouble(cursor.getColumnIndex(DbConfig.VALUE_NAME));
