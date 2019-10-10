@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.example.mquinadetroco.data.model.ItemCoin;
 
@@ -34,19 +33,19 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void configDb(SQLiteDatabase db) {
 
-        Log.i("Diabao", "teste");
         List<ItemCoin> coinArrayList = new ArrayList<>();
-        coinArrayList.add(new ItemCoin(0, 0.05, 0));
-        coinArrayList.add(new ItemCoin(0, 0.10, 0));
-        coinArrayList.add(new ItemCoin(0, 0.25, 0));
-        coinArrayList.add(new ItemCoin(0, 0.50, 0));
-        coinArrayList.add(new ItemCoin(0, 1.0, 0));
-        coinArrayList.add(new ItemCoin(0, 2, 0));
-        coinArrayList.add(new ItemCoin(0, 5, 0));
-        coinArrayList.add(new ItemCoin(0, 10, 0));
-        coinArrayList.add(new ItemCoin(0, 20, 0));
-        coinArrayList.add(new ItemCoin(0, 50, 0));
+
         coinArrayList.add(new ItemCoin(0, 100, 0));
+        coinArrayList.add(new ItemCoin(0, 50, 0));
+        coinArrayList.add(new ItemCoin(0, 20, 0));
+        coinArrayList.add(new ItemCoin(0, 10, 0));
+        coinArrayList.add(new ItemCoin(0, 5, 0));
+        coinArrayList.add(new ItemCoin(0, 2, 0));
+        coinArrayList.add(new ItemCoin(0, 1.0, 0));
+        coinArrayList.add(new ItemCoin(0, 0.50, 0));
+        coinArrayList.add(new ItemCoin(0, 0.25, 0));
+        coinArrayList.add(new ItemCoin(0, 0.10, 0));
+        coinArrayList.add(new ItemCoin(0, 0.05, 0));
 
         for (ItemCoin itemCoin : coinArrayList) {
             ContentValues contentValues = new ContentValues();

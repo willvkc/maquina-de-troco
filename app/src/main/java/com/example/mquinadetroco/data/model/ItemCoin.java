@@ -1,47 +1,47 @@
 package com.example.mquinadetroco.data.model;
 
-import android.content.Context;
-
-import com.example.mquinadetroco.R;
+import java.text.NumberFormat;
 
 public class ItemCoin {
 
-    private int id;
+    private Integer id;
     private double value;
-    private int amount;
+    private Integer amount;
 
-    public ItemCoin(int id, double value, int amount) {
+    public ItemCoin(Integer id, double value, Integer amount) {
         this.id = id;
         this.value = value;
         this.amount = amount;
 
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
+
 
     public double getValue() {
         return value;
     }
 
+
     public void setValue(double value) {
         this.value = value;
     }
 
-    public int getAmount() {
+    public Integer getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(Integer amount) {
         this.amount = amount;
     }
 
-    public String getType() {
+    private String getType() {
         if (getValue() > 1) {
             return "Cédula ";
         } else {
@@ -49,7 +49,16 @@ public class ItemCoin {
         }
     }
 
+    public String getValueFormat1() {
+        return getType() + NumberFormat.getCurrencyInstance().format(value * amount);
+    }
+
     public String getValueFormat() {
-        return "R$" + Double.toString(value).replace(".", ",");
+        return getType() + NumberFormat.getCurrencyInstance().format(value);
+    }
+
+    public String getTotal() {
+        if (amount == 0) return "";
+        else return "Total: " + NumberFormat.getCurrencyInstance().format(value * amount);
     }
 }

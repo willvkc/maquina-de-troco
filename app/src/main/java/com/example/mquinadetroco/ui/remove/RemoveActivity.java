@@ -1,4 +1,4 @@
-package com.example.mquinadetroco.ui.supply;
+package com.example.mquinadetroco.ui.remove;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -17,65 +17,67 @@ import com.example.mquinadetroco.data.model.Response;
 
 import java.util.List;
 
-public class SupplyActivity extends AppCompatActivity {
+public class RemoveActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_supply);
+        setContentView(R.layout.activity_remove);
 
         //ActionBar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Adicionar dinheiro");
+        getSupportActionBar().setTitle("Remover dinheiro");
 
-        //Find views
         final EditText amountEditText = findViewById(R.id.amountEditText);
         final Spinner spinnerCoin = findViewById(R.id.spinnerCoin);
 
-        final SupplyViewModel supplyViewModel = ViewModelProviders.of(this, null).get(SupplyViewModel.class);
-        supplyViewModel.create(this);
+        final RemoveViewModel removeViewModel = ViewModelProviders.of(this, null).get(RemoveViewModel.class);
+        removeViewModel.instace(this);
 
-        supplyViewModel.listMutableLiveData.observe(this, new Observer<List<ItemCoin>>() {
+        removeViewModel.listMutableLiveData.observe(this, new Observer<List<ItemCoin>>() {
             @Override
             public void onChanged(List<ItemCoin> itemCoins) {
                 if (itemCoins != null) {
-                    final SupplySpinnerAdapter supplySpinnerAdapter = new SupplySpinnerAdapter(getApplicationContext(), R.layout.item_spinner, itemCoins);
-                    spinnerCoin.setAdapter(supplySpinnerAdapter);
 
-                    findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
+                    if (itemCoins.size() == 0) {
+                        showMessage("Seu caixa está vazio, nenhuma moeda pode ser removida!");
+                        finish();
+                        return;
+                    }
+
+                    final RemoveSpinnerAdapter removeSpinnerAdapter = new RemoveSpinnerAdapter(getApplicationContext(), R.layout.item_spinner, itemCoins);
+                    spinnerCoin.setAdapter(removeSpinnerAdapter);
+
+                    findViewById(R.id.removeButton).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
                             if (amountEditText.getText().toString().isEmpty()) {
                                 showMessage("Quantidade deve ser preenchida");
-                            }else {
-                                int id = (int) supplySpinnerAdapter.getItemId(spinnerCoin.getSelectedItemPosition());
+                            } else {
+                                int id = (int) removeSpinnerAdapter.getItemId(spinnerCoin.getSelectedItemPosition());
                                 int amount = Integer.parseInt(amountEditText.getText().toString());
-                                supplyViewModel.updateCoin(new ItemCoin(id, 0.0, amount));
+                                removeViewModel.removeCoin(new ItemCoin(id, 0.0, amount));
                             }
-
                         }
                     });
 
                 }
             }
         });
-        supplyViewModel.responseLiveData.observe(this, new Observer<Response>() {
+
+        removeViewModel.responseLiveData.observe(this, new Observer<Response>() {
             @Override
             public void onChanged(Response response) {
                 if (response != null) {
                     showMessage(response.getMessage());
-                    amountEditText.setText("");
-                    if (!response.isError()){
-                        supplyViewModel.getList();
-                    }
+                    if (!response.isError()) finish();
                 }
+
             }
         });
 
 
-        supplyViewModel.getList();
-
+        removeViewModel.getList();
     }
 
     void showMessage(String message) {
@@ -91,6 +93,5 @@ public class SupplyActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 
 }

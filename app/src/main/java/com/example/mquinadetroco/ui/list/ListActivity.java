@@ -1,13 +1,10 @@
 package com.example.mquinadetroco.ui.list;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mquinadetroco.R;
 import com.example.mquinadetroco.data.model.ItemCoin;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ListActivity extends AppCompatActivity {
@@ -30,8 +26,7 @@ public class ListActivity extends AppCompatActivity {
 
         //ActionBar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle("Meu Caixa");
+        getSupportActionBar().setTitle("Caixa");
 
         final RecyclerView listRecyclerView = findViewById(R.id.listRecyclerView);
 

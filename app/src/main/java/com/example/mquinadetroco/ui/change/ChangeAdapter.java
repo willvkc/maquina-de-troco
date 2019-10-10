@@ -1,5 +1,4 @@
-package com.example.mquinadetroco.ui.list;
-
+package com.example.mquinadetroco.ui.change;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +15,17 @@ import java.util.List;
  * Created by willv on 26/10/2017.
  */
 
-public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder> {
+public class ChangeAdapter extends RecyclerView.Adapter<ChangeAdapter.ListViewHolder> {
 
     private List<ItemCoin> resultsItemList;
 
-    public ListAdapter(List<ItemCoin> resultsItemList) {
+    public ChangeAdapter(List<ItemCoin> resultsItemList) {
         this.resultsItemList = resultsItemList;
     }
 
     @Override
     public ListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_change, parent, false);
         ListViewHolder viewHolder = new ListViewHolder(view);
         return viewHolder;
     }
@@ -36,7 +35,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         ItemCoin itemCoin = resultsItemList.get(position);
         viewHolder.coinTextView.setText(itemCoin.getValueFormat());
         viewHolder.amountTextView.setText("qtd: " + itemCoin.getAmount());
-        viewHolder.totalTextView.setText(itemCoin.getTotal());
     }
 
     @Override
@@ -47,14 +45,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
     class ListViewHolder extends RecyclerView.ViewHolder {
 
         private TextView coinTextView;
-        private TextView totalTextView;
         private TextView amountTextView;
 
         ListViewHolder(View view) {
             super(view);
 
             coinTextView = view.findViewById(R.id.coinTextView);
-            totalTextView = view.findViewById(R.id.totalTextView);
             amountTextView = view.findViewById(R.id.amountTextView);
         }
     }

@@ -1,4 +1,4 @@
-package com.example.mquinadetroco.ui.supply;
+package com.example.mquinadetroco.ui.remove;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -16,14 +16,14 @@ import com.example.mquinadetroco.data.model.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SupplyViewModel extends ViewModel {
+public class RemoveViewModel extends ViewModel {
 
     MutableLiveData<List<ItemCoin>> listMutableLiveData = new MutableLiveData<>();
     MutableLiveData<Response> responseLiveData = new MutableLiveData<>();
 
     private DbGateway dbGateway;
 
-    void create(@NonNull Context context) {
+    void instace(@NonNull Context context) {
         dbGateway = DbGateway.getInstance(context);
     }
 
@@ -35,21 +35,16 @@ public class SupplyViewModel extends ViewModel {
             int id = cursor.getInt(cursor.getColumnIndex(DbConfig.ID_NAME));
             int amount = cursor.getInt(cursor.getColumnIndex(DbConfig.AMOUNT_NAME));
             Double value = cursor.getDouble(cursor.getColumnIndex(DbConfig.VALUE_NAME));
-            itemCoinList.add(new ItemCoin(id, value, amount));
+            if (amount >= 1) itemCoinList.add(new ItemCoin(id, value, amount));
         }
         cursor.close();
         listMutableLiveData.setValue(itemCoinList);
-
     }
 
-    void updateCoin(ItemCoin itemCoin) {
+    void removeCoin(ItemCoin itemCoin) {
 
-        if (itemCoin.getAmount() == null) {
-            responseLiveData.setValue(new Response("Quantidade deve ser preenchido", true));
-            return;
-        }
         if (itemCoin.getAmount() == 0) {
-            responseLiveData.setValue(new Response("Quantidade a ser adicionado não pode ser zero.", true));
+            responseLiveData.setValue(new Response("Quantidade a ser removida não pode ser zero.", true));
             return;
         }
 
@@ -58,10 +53,19 @@ public class SupplyViewModel extends ViewModel {
         int amount = cursor.getInt(cursor.getColumnIndex(DbConfig.AMOUNT_NAME));
         cursor.close();
 
-        ContentValues values = new ContentValues();
-        values.put(DbConfig.AMOUNT_NAME, amount + itemCoin.getAmount());
-        dbGateway.getDatabase().update(DbConfig.TABLE_NAME, values, DbConfig.ID_NAME + "=?", new String[]{Integer.toString(itemCoin.getId())});
-        responseLiveData.setValue(new Response("Quantidade adicionada com sucesso.", false));
+        amount = amount - itemCoin.getAmount();
+
+        if (amount < 0) {
+            responseLiveData.setValue(new Response("Quantidade não pode ser menor que zero", true));
+        } else {
+            ContentValues values = new ContentValues();
+            values.put(DbConfig.AMOUNT_NAME, amount);
+            dbGateway.getDatabase().update(DbConfig.TABLE_NAME, values, DbConfig.ID_NAME + "=?", new String[]{Integer.toString(itemCoin.getId())});
+            responseLiveData.setValue(new Response("Quantidade removida com sucesso.", true));
+            getList();
+
+        }
+
 
     }
 

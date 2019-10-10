@@ -7,35 +7,36 @@
     tools:context=".ui.home.HomeActivity">
 
     <Button
-        android:id="@+id/addButton"
+        android:id="@+id/supplyButton"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Abastecer"
+        android:layout_marginBottom="64dp"
+        android:text="Adicionar Dinheiro"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/generateButton"
+        android:id="@+id/removeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Remover Dinheiro"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/supplyButton" />
+
+    <Button
+        android:id="@+id/changeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Gerar troco"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addButton" />
-
-    <Button
-        android:id="@+id/removeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Remover"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/generateButton" />
+        app:layout_constraintTop_toBottomOf="@+id/removeButton" />
 
     <Button
         android:id="@+id/listButton"
@@ -45,5 +46,5 @@
         android:text="Caixa"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/removeButton" />
+        app:layout_constraintTop_toBottomOf="@+id/changeButton" />
 </androidx.constraintlayout.widget.ConstraintLayout>
