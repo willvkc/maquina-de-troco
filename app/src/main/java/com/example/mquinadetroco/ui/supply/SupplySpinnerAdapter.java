@@ -24,7 +24,6 @@ public class SupplySpinnerAdapter extends ArrayAdapter<ItemCoin> {
         super(context, textViewResourceId, itemCoinList);
         this.itemCoinList = itemCoinList;
         this.context = context;
-
     }
 
     @Override

@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="valor a ser pago"
+            android:hint="Valor a ser pago"
             android:inputType="number|numberDecimal"
             android:singleLine="false"
             android:textAlignment="center" />
@@ -65,7 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Segue abaixo as moedas necessárias"
+        android:text="Segue abaixo o troco necessário."
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

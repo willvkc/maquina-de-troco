@@ -16,6 +16,7 @@ import com.example.mquinadetroco.data.model.ItemCoin;
 import com.example.mquinadetroco.data.model.Response;
 
 import java.util.List;
+import java.util.Objects;
 
 public class SupplyActivity extends AppCompatActivity {
 
@@ -25,7 +26,7 @@ public class SupplyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_supply);
 
         //ActionBar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Adicionar dinheiro");
 
         //Find views
@@ -47,8 +48,8 @@ public class SupplyActivity extends AppCompatActivity {
                         public void onClick(View v) {
 
                             if (amountEditText.getText().toString().isEmpty()) {
-                                showMessage("Quantidade deve ser preenchida");
-                            }else {
+                                showMessage("Quantidade deve ser preenchida.");
+                            } else {
                                 int id = (int) supplySpinnerAdapter.getItemId(spinnerCoin.getSelectedItemPosition());
                                 int amount = Integer.parseInt(amountEditText.getText().toString());
                                 supplyViewModel.updateCoin(new ItemCoin(id, 0.0, amount));
@@ -66,7 +67,7 @@ public class SupplyActivity extends AppCompatActivity {
                 if (response != null) {
                     showMessage(response.getMessage());
                     amountEditText.setText("");
-                    if (!response.isError()){
+                    if (!response.isError()) {
                         supplyViewModel.getList();
                     }
                 }

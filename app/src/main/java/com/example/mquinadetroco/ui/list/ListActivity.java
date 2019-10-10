@@ -2,6 +2,7 @@ package com.example.mquinadetroco.ui.list;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -14,6 +15,7 @@ import com.example.mquinadetroco.R;
 import com.example.mquinadetroco.data.model.ItemCoin;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ListActivity extends AppCompatActivity {
 
@@ -25,9 +27,10 @@ public class ListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list);
 
         //ActionBar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Caixa");
 
+        //findViewById
         final RecyclerView listRecyclerView = findViewById(R.id.listRecyclerView);
 
         listViewModel = ViewModelProviders.of(this, null).get(ListViewModel.class);
@@ -35,11 +38,13 @@ public class ListActivity extends AppCompatActivity {
         listViewModel.listMutableLiveData.observe(this, new Observer<List<ItemCoin>>() {
             @Override
             public void onChanged(List<ItemCoin> itemCoins) {
-                if (itemCoins != null){
+                if (itemCoins != null) {
                     ListAdapter listAdapter = new ListAdapter(itemCoins);
                     listRecyclerView.setItemAnimator(new DefaultItemAnimator());
                     listRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                     listRecyclerView.setAdapter(listAdapter);
+                } else {
+                    showMessage("Error list");
                 }
             }
         });
@@ -56,6 +61,10 @@ public class ListActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showMessage(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
 

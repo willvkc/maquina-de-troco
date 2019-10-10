@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mquinadetroco.R;
 import com.example.mquinadetroco.data.model.Response;
 
+import java.util.Objects;
+
 public class ChangeActivity extends AppCompatActivity {
 
     @Override
@@ -27,9 +29,10 @@ public class ChangeActivity extends AppCompatActivity {
         changeViewModel.create(this);
 
         //ActionBar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Gerar Troco");
 
+        //findViewById
         final EditText countEditText = findViewById(R.id.countEditText);
         final EditText amountEditText = findViewById(R.id.amountEditText);
         final RecyclerView listRecyclerView = findViewById(R.id.listRecyclerView);
@@ -54,10 +57,8 @@ public class ChangeActivity extends AppCompatActivity {
                     showMessage("Valor da conta não pode ser maior ou igual do que o pagamento.");
                     return;
                 } else {
-                    changeViewModel.calculaTroco(Double.parseDouble(countEditText.getText().toString()), Double.parseDouble(amountEditText.getText().toString()));
+                    changeViewModel.getChange(Double.parseDouble(countEditText.getText().toString()), Double.parseDouble(amountEditText.getText().toString()));
                 }
-
-
             }
         });
 
@@ -66,8 +67,9 @@ public class ChangeActivity extends AppCompatActivity {
             public void onChanged(Response response) {
                 if (response != null) {
                     showMessage(response.getMessage());
-                   // amountEditText.setText("");
-                   // countEditText.setText("");
+                    amountEditText.setText("");
+                    countEditText.setText("");
+                    totalTextView.setText("");
 
                     if (!response.isError()) {
                         textView.setVisibility(View.VISIBLE);
@@ -90,8 +92,8 @@ public class ChangeActivity extends AppCompatActivity {
 
     }
 
-    void showMessage(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    private void showMessage(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

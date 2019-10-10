@@ -16,6 +16,7 @@ import com.example.mquinadetroco.data.model.ItemCoin;
 import com.example.mquinadetroco.data.model.Response;
 
 import java.util.List;
+import java.util.Objects;
 
 public class RemoveActivity extends AppCompatActivity {
 
@@ -25,9 +26,10 @@ public class RemoveActivity extends AppCompatActivity {
         setContentView(R.layout.activity_remove);
 
         //ActionBar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Remover dinheiro");
 
+        //findViewById
         final EditText amountEditText = findViewById(R.id.amountEditText);
         final Spinner spinnerCoin = findViewById(R.id.spinnerCoin);
 
@@ -38,9 +40,8 @@ public class RemoveActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<ItemCoin> itemCoins) {
                 if (itemCoins != null) {
-
                     if (itemCoins.size() == 0) {
-                        showMessage("Seu caixa está vazio, nenhuma moeda pode ser removida!");
+                        showMessage("Seu caixa está vazio, nenhum dinheiro pode ser removido!");
                         finish();
                         return;
                     }
@@ -52,7 +53,7 @@ public class RemoveActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             if (amountEditText.getText().toString().isEmpty()) {
-                                showMessage("Quantidade deve ser preenchida");
+                                showMessage("Quantidade deve ser preenchida.");
                             } else {
                                 int id = (int) removeSpinnerAdapter.getItemId(spinnerCoin.getSelectedItemPosition());
                                 int amount = Integer.parseInt(amountEditText.getText().toString());
@@ -70,18 +71,19 @@ public class RemoveActivity extends AppCompatActivity {
             public void onChanged(Response response) {
                 if (response != null) {
                     showMessage(response.getMessage());
-                    if (!response.isError()) finish();
-                }
+                    if (!response.isError()){
+                        amountEditText.setText("");
+                    }
+                } else showMessage("Error remove");
 
             }
         });
-
 
         removeViewModel.getList();
     }
 
     void showMessage(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

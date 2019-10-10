@@ -25,77 +25,76 @@ public class ChangeViewModel extends ViewModel {
         dbGateway = DbGateway.getInstance(context);
     }
 
-    List<ItemCoin> getList() {
+    private List<ItemCoin> getList() {
         List<ItemCoin> itemCoinList = new ArrayList<>();
         Cursor cursor = dbGateway.getDatabase().rawQuery("SELECT * FROM " + DbConfig.TABLE_NAME + " ORDER BY " + DbConfig.VALUE_NAME + " DESC", null);
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndex(DbConfig.ID_NAME));
             int amount = cursor.getInt(cursor.getColumnIndex(DbConfig.AMOUNT_NAME));
-            Double value = cursor.getDouble(cursor.getColumnIndex(DbConfig.VALUE_NAME));
+            double value = cursor.getDouble(cursor.getColumnIndex(DbConfig.VALUE_NAME));
             if (amount >= 1) itemCoinList.add(new ItemCoin(id, value, amount));
         }
         cursor.close();
         return itemCoinList;
     }
 
-    void calculaTroco(double conta, double pago) {
+    void getChange(double count, double pay) {
         List<ItemCoin> listCoinsSelected = new ArrayList<>();
-        DecimalFormat formato = new DecimalFormat("#.##");
+        DecimalFormat moneyFormat = new DecimalFormat("#.##");
         List<ItemCoin> listCoins = getList();
-        double troco = Double.parseDouble(formato.format(pago - conta).replace(",", "."));
-        boolean accept = listCoins.size() > 0;
+        double change = Double.parseDouble(moneyFormat.format(pay - count).replace(",", "."));
+        boolean accept;
 
-        teste:
         for (int i = 0; i < listCoins.size(); i++) {
             ItemCoin itemCoin = listCoins.get(i);
             double value = itemCoin.getValue();
-            int amount = (int) (troco / value);
-            double remnant = troco % value;
-            remnant = Double.valueOf(formato.format(remnant).replace(",", "."));
+            int amount = (int) (change / value);
+            double remnant = change % value;
+            remnant = Double.valueOf(moneyFormat.format(remnant).replace(",", "."));
 
-            if (value <= troco) {
+            if (value <= change) {
 
+                //If the required amount of forum coins is needed, it will not fetch any more available coins.
                 if (amount == 1) {
                     listCoinsSelected.add(new ItemCoin(itemCoin.getId(), value, amount));
-                    troco = Double.valueOf(formato.format(remnant).replace(",", "."));
+                    change = Double.valueOf(moneyFormat.format(remnant).replace(",", "."));
                 }
                 if (amount > 1) {
+                    //Compare if you have the available amount of boxed coins, if not, go to next coin.
                     if (amount > itemCoin.getAmount()) {
-                        remnant = Double.valueOf(formato.format(troco - ((amount - itemCoin.getAmount()) * value)).replace(",", "."));
+                        remnant = Double.valueOf(moneyFormat.format(change - ((amount - itemCoin.getAmount()) * value)).replace(",", "."));
                         amount = itemCoin.getAmount();
                     }
-                    troco = Double.valueOf(formato.format(remnant).replace(",", "."));
+                    change = Double.valueOf(moneyFormat.format(remnant).replace(",", "."));
                     listCoinsSelected.add(new ItemCoin(itemCoin.getId(), value, amount));
                 }
             }
         }
-        //Log.i("Teste", "troco_final " + troco);
-        accept = troco == 0;
+        accept = change == 0;
         if (accept) {
-            removeCoins(listCoinsSelected, pago - conta);
+            removeCoins(listCoinsSelected, pay - count);
         } else {
-            Response response = new Response("Não possui moedas necessárias para gerar troco.", true);
+            Response response = new Response("Não possui dinheiro necessário para gerar troco.", true);
             responseLiveData.setValue(response);
         }
     }
-
 
     private void removeCoins(List<ItemCoin> itemCoinList, Double sum) {
         for (ItemCoin itemCoin : itemCoinList) {
             Cursor cursor = dbGateway.getDatabase().rawQuery("SELECT * FROM " + DbConfig.TABLE_NAME + " WHERE " + DbConfig.ID_NAME + "= ?", new String[]{itemCoin.getId().toString()});
             cursor.moveToFirst();
-            int amount = cursor.getInt(cursor.getColumnIndex(DbConfig.AMOUNT_NAME)) - itemCoin.getAmount();
+            int amount = cursor.getInt(cursor.getColumnIndex(DbConfig.AMOUNT_NAME));
+            amount = amount - itemCoin.getAmount();
             cursor.close();
             ContentValues values = new ContentValues();
             values.put(DbConfig.AMOUNT_NAME, amount);
             dbGateway.getDatabase().update(DbConfig.TABLE_NAME, values, DbConfig.ID_NAME + "=?", new String[]{Integer.toString(itemCoin.getId())});
         }
 
-        Response response = new Response("Troco Gerado com sucesso", false);
+        Response response = new Response("Troco gerado com sucesso.", false);
         response.setItemCoins(itemCoinList);
         response.setTotal(sum);
         responseLiveData.setValue(response);
-
     }
 
 

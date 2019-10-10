@@ -28,7 +28,6 @@ public class RemoveViewModel extends ViewModel {
 
     void getList() {
         List<ItemCoin> itemCoinList = new ArrayList<>();
-
         Cursor cursor = dbGateway.getDatabase().rawQuery("SELECT * FROM " + DbConfig.TABLE_NAME + " ORDER BY " + DbConfig.VALUE_NAME + " DESC", null);
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndex(DbConfig.ID_NAME));
@@ -55,12 +54,12 @@ public class RemoveViewModel extends ViewModel {
         amount = amount - itemCoin.getAmount();
 
         if (amount < 0) {
-            responseLiveData.setValue(new Response("Quantidade não pode ser menor que zero", true));
+            responseLiveData.setValue(new Response("Quantidade a ser removida não pode ser maior que a disponível.", true));
         } else {
             ContentValues values = new ContentValues();
             values.put(DbConfig.AMOUNT_NAME, amount);
             dbGateway.getDatabase().update(DbConfig.TABLE_NAME, values, DbConfig.ID_NAME + "=?", new String[]{Integer.toString(itemCoin.getId())});
-            responseLiveData.setValue(new Response("Quantidade removida com sucesso.", true));
+            responseLiveData.setValue(new Response("Dinheiro removido com sucesso.", false));
             getList();
 
         }

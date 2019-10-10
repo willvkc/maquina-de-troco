@@ -5,16 +5,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mquinadetroco.R;
 import com.example.mquinadetroco.data.model.ItemCoin;
 
 import java.util.List;
-
-/**
- * Created by willv on 26/10/2017.
- */
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder> {
 
@@ -24,6 +21,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         this.resultsItemList = resultsItemList;
     }
 
+    @NonNull
     @Override
     public ListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list, parent, false);

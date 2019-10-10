@@ -16,12 +16,11 @@ import com.example.mquinadetroco.ui.supply.SupplyActivity;
 
 public class HomeActivity extends AppCompatActivity {
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //create database
         DbGateway dbGateway = DbGateway.getInstance(this);
 
         findViewById(R.id.listButton).setOnClickListener(new View.OnClickListener() {

@@ -42,7 +42,7 @@ public class SupplyViewModel extends ViewModel {
     void updateCoin(ItemCoin itemCoin) {
 
         if (itemCoin.getAmount() == null) {
-            responseLiveData.setValue(new Response("Quantidade deve ser preenchido", true));
+            responseLiveData.setValue(new Response("Quantidade deve ser preenchida.", true));
             return;
         }
         if (itemCoin.getAmount() == 0) {
@@ -58,7 +58,7 @@ public class SupplyViewModel extends ViewModel {
         ContentValues values = new ContentValues();
         values.put(DbConfig.AMOUNT_NAME, amount + itemCoin.getAmount());
         dbGateway.getDatabase().update(DbConfig.TABLE_NAME, values, DbConfig.ID_NAME + "=?", new String[]{Integer.toString(itemCoin.getId())});
-        responseLiveData.setValue(new Response("Quantidade adicionada com sucesso.", false));
+        responseLiveData.setValue(new Response("Dinheiro adicionado com sucesso.", false));
 
     }
 
