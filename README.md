@@ -1,2 +1,2 @@
 # maquina-de-troco
-Em desenvolvimento!
+Finalizado
